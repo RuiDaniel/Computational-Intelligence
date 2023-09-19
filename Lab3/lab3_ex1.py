@@ -42,7 +42,7 @@ def detect_outliers_plot(df):
     plt.grid()
     plt.show()
     
-detect_outliers_plot(df)
+# detect_outliers_plot(df)
 
 # 2) Detect the samples that are k*σ far from the average.
 
@@ -70,36 +70,44 @@ df_without_outliers = remove_outlier_1(df, outliers)
 def remove_outlier_2(df, outliers):
     indexes = []
     for i in range(outliers.shape[0]):
-        indexes.append(outliers.loc[df['Volume '] > -1].index[i])
+        indexes.append(outliers.loc[df['Volume'] > -1].index[i])
 
-    row_old_value = df.iloc[-1]['Volume ']
+    row_old = df.iloc[-1]
+    
     for index, row in df.iterrows():
         if index in indexes:
-            df.at[index,'Volume '] = row_old_value
-        row_old_value = row['Volume ']
+            df.at[index,'Open'] = row_old['Open']
+            df.at[index,'High'] = row_old['High']
+            df.at[index,'Low'] = row_old['Low']
+            df.at[index,'Close'] = row_old['Close']
+            df.at[index,'Volume'] = row_old['Volume']
+        row_old = row
     
     return df
 
 # print(df)
 # df_without_outliers = remove_outlier_2(df, outliers)
-# print(df_without_outliers)
+# print(df_without_outliers.loc[[106, 107]])
 
 # 5) Change the value with the interpolation of the previous and the next one.
 
 def remove_outlier_3(df, outliers):
     indexes = []
     for i in range(outliers.shape[0]):
-        indexes.append(outliers.loc[df['Volume '] > -1].index[i])
+        indexes.append(outliers.loc[df['Volume'] > -1].index[i])
 
     prev = -1
     next = 1
     
     for index, _ in df.iterrows():
-        row_old_value = df.iloc[prev]['Volume ']
-        row_next_value = df.iloc[next]['Volume ']
+        row_old = df.iloc[prev]
+        row_next = df.iloc[next]
         if index in indexes:
-            print(index, row_old_value, row_next_value)
-            df.at[index,'Volume '] = (row_old_value + row_next_value) / 2
+            df.at[index,'Open'] = (row_old['Open'] + row_next['Open']) / 2
+            df.at[index,'High'] = (row_old['High'] + row_next['High']) / 2
+            df.at[index,'Low'] = (row_old['Low'] + row_next['Low']) / 2
+            df.at[index,'Close'] = (row_old['Close'] + row_next['Close']) / 2
+            df.at[index,'Volume'] = (row_old['Volume'] + row_next['Volume']) / 2
         prev += 1
         next += 1
         
@@ -110,11 +118,11 @@ def remove_outlier_3(df, outliers):
 
 # print(df)
 # df_without_outliers = remove_outlier_3(df, outliers)
-# print(df_without_outliers)
+# print(df_without_outliers.loc[[106, 107, 108]])
 
 # Finally plot the results without the outliers (and save them).
 
 # t1 = np.arange(0, 196, 1)
-# plt.plot(t1, df_without_outliers['Volume '])
+# plt.plot(t1, df_without_outliers['Volume'])
 # plt.grid()
 # plt.show()
