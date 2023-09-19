@@ -34,7 +34,7 @@ import numpy as np
 
 def detect_outliers_plot(df):
     t1 = np.arange(0, 199, 1)
-    plt.plot(t1, df['Volume '])
+    plt.plot(t1, df['Open'])
 
     #plt.legend(['volume', 'close'])
     #plt.xlabel('High - Low')
@@ -42,7 +42,7 @@ def detect_outliers_plot(df):
     plt.grid()
     plt.show()
     
-# detect_outliers_plot(df)
+detect_outliers_plot(df)
 
 # 2) Detect the samples that are k*σ far from the average.
 
@@ -52,7 +52,7 @@ def detect_outliers(df, column, k):
     outliers = df[abs(df[column] - mean) > k * dp]
     return outliers
 
-outliers = detect_outliers(df, 'Volume ', 3.1)
+outliers = detect_outliers(df, 'Open', 3.1)
 print(outliers)
 
 # Now make three different functions to remove the outlier.
