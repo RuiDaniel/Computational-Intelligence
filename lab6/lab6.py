@@ -27,3 +27,12 @@ X = (np.array(iris))[:,:-1]
 
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
+y_haber = (np.array(haberman))[:,-1]
+# print(y)
+
+X_haber = (np.array(haberman))[:,:-1]
+# print(X)
+
+X_train_haber, X_test_haber, y_train_haber, y_test_haber = train_test_split(X_haber, y_haber, test_size=0.3, random_state=42)
+
+
