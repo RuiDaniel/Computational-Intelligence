@@ -133,3 +133,7 @@ for ax in (ax0,):
 plt.tight_layout()
 
 plt.show()
+
+
+
+print('tip output: {}'.format(tip_activation))
