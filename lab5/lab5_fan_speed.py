@@ -1,4 +1,5 @@
 import simpful as sf
+import numpy as np
 
 # The aim is to control the speed of a CPU fan based on the:
 # – Core temperature (in degrees Celsius)
@@ -39,8 +40,23 @@ FS.add_rules([
 	])
 
 
+temp_range = list(range(0,100,2))
+clk_range = np.arange(0,4,0.3)
+
+print(clk_range)
+
+test_output = []
+
+for temp_element in temp_range:
+    for clk_element in clk_range:
+        FS.set_variable("core_temperature", temp_element) 
+        FS.set_variable("clock_speed", clk_element)
+        test_output.append(FS.inference())
+
 FS.set_variable("core_temperature", 50) 
 FS.set_variable("clock_speed", 2) 
+
+
 
 fan_speed1 = FS.inference()
 print(fan_speed1)
