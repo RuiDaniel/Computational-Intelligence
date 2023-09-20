@@ -68,10 +68,10 @@ tips = np.zeros_like(x)
 # Loop through the system 21*21 times to collect the control surface
 for i in range(11):
     for j in range(11):
-        tipping.input['error'] = x[i, j]
-        tipping.input['delta'] = y[i, j]
+        tipping.input['quality'] = x[i, j]
+        tipping.input['service'] = y[i, j]
         tipping.compute()
-        tips[i, j] = tipping.output['output']
+        tips[i, j] = tipping.output['tip']
 
 fig = plt.figure(figsize=(8, 8))
 ax = fig.add_subplot(111, projection='3d')
