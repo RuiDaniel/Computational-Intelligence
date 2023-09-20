@@ -2,6 +2,7 @@ import numpy as np
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D  # Required for 3D plotting
 
 # New Antecedent/Consequent objects hold universe variables and membership
 # functions
@@ -58,3 +59,17 @@ tipping.compute()
 print(tipping.output['tip'])
 tip.view(sim=tipping)
 plt.show()
+
+
+upsampled = np.arange(0, 11, 1)
+x, y = np.meshgrid(upsampled, upsampled)
+tips = np.zeros_like(x)
+
+# Loop through the system 21*21 times to collect the control surface
+for i in range(11):
+    for j in range(11):
+        tipping.input['error'] = x[i, j]
+        tipping.input['delta'] = y[i, j]
+        tipping.compute()
+        tips[i, j] = tipping.output['output']
+
