@@ -51,7 +51,7 @@ for temp_element in temp_range:
     for clk_element in clk_range:
         FS.set_variable("core_temperature", temp_element) 
         FS.set_variable("clock_speed", clk_element)
-        test_output.append(FS.inference())
+        test_output.append(FS.inference()['fan_speed'])
 
 FS.set_variable("core_temperature", 50) 
 FS.set_variable("clock_speed", 2) 
