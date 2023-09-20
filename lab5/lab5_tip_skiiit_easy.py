@@ -73,3 +73,14 @@ for i in range(11):
         tipping.compute()
         tips[i, j] = tipping.output['output']
 
+fig = plt.figure(figsize=(8, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+surf = ax.plot_surface(x, y, tips, rstride=1, cstride=1, cmap='viridis',
+                       linewidth=0.4, antialiased=True)
+
+cset = ax.contourf(x, y, tips, zdir='z', offset=-2.5, cmap='viridis', alpha=0.5)
+cset = ax.contourf(x, y, tips, zdir='x', offset=3, cmap='viridis', alpha=0.5)
+cset = ax.contourf(x, y, tips, zdir='y', offset=3, cmap='viridis', alpha=0.5)
+
+ax.view_init(30, 200)
