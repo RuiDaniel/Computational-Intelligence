@@ -39,8 +39,8 @@ FS.add_rules([
 	])
 
 
-FS.set_variable("core_temperature", 50) 
-FS.set_variable("clock_speed", 3) 
+FS.set_variable("core_temperature", "cold") 
+FS.set_variable("clock_speed", "turbo") 
 
 fan_speed1 = FS.inference()
 print(fan_speed1)
