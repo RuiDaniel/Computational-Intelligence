@@ -57,6 +57,7 @@ FS.set_variable("core_temperature", 50)
 FS.set_variable("clock_speed", 2) 
 
 
+print('test_output: {}'.format(test_output))
 
 fan_speed1 = FS.inference()
 print(fan_speed1)
