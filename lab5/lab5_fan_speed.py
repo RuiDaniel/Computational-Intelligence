@@ -1,5 +1,6 @@
 import simpful as sf
 import numpy as np
+import matplotlib.pyplot as plt
 
 # The aim is to control the speed of a CPU fan based on the:
 # – Core temperature (in degrees Celsius)
@@ -41,7 +42,7 @@ FS.add_rules([
 
 
 temp_range = list(range(0,100,2))
-clk_range = np.arange(0,4,0.3)
+clk_range = list(np.arange(0,4,0.3))
 
 print(clk_range)
 
@@ -53,11 +54,29 @@ for temp_element in temp_range:
         FS.set_variable("clock_speed", clk_element)
         test_output.append(FS.inference()['fan_speed'])
 
+print('test_output: {}'.format(test_output))
+print(type(test_output[0]))
+
+
+# Create a grid of x and y values
+temp_grid, clk_grid = np.meshgrid(temp_range, clk_range)
+
+# Reshape the test_output to match the grid dimensions
+test_output = np.array(test_output).reshape(temp_grid.shape)
+print(test_output.shape)
+
+# Create the 3D plot
+fig = plt.figure()
+ax = fig.add_subplot(111, projection='3d')
+ax.plot_surface(temp_grid, clk_grid, test_output, cmap='viridis')
+
+ax.set_xlabel('Core Temperature')
+ax.set_ylabel('Clock Speed')
+ax.set_zlabel('Fan Speed')
+
+plt.show()
+
 FS.set_variable("core_temperature", 50) 
 FS.set_variable("clock_speed", 2) 
-
-
-print('test_output: {}'.format(test_output))
-
 fan_speed1 = FS.inference()
 print(fan_speed1)
