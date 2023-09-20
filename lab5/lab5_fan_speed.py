@@ -27,20 +27,20 @@ FS.add_linguistic_variable("fan_speed", sf.LinguisticVariable([F1, F2], universe
 
 
 FS.add_rules([
-    "IF (core_temperature IS cold) AND (clock_speed is low) THEN (fan_speed is slow)",
-    "IF (core_temperature IS cold) AND (clock_speed is normal) THEN (fan_speed is slow)",
-    "IF (core_temperature IS cold) AND (clock_speed is turbo) THEN (fan_speed is fast)",
-    "IF (core_temperature IS warm) AND (clock_speed is low) THEN (fan_speed IS slow)",
-    "IF (core_temperature IS warm) AND (clock_speed is normal) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS cold) AND (clock_speed IS low) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS cold) AND (clock_speed IS normal) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS cold) AND (clock_speed IS turbo) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS warm) AND (clock_speed IS low) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS warm) AND (clock_speed IS normal) THEN (fan_speed IS slow)",
     "IF (core_temperature IS warm) AND (clock_speed IS turbo) THEN (fan_speed IS fast)",
-    "IF (core_temperature IS hot) AND (clock_speed is low) THEN (fan_speed IS fast)",
-    "IF (core_temperature IS hot) AND (clock_speed is normal) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS hot) AND (clock_speed IS low) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS hot) AND (clock_speed IS normal) THEN (fan_speed IS fast)",
     "IF (core_temperature IS hot) AND (clock_speed IS turbo) THEN (fan_speed IS fast)"
 	])
 
 
-FS.set_variable("core_temperature", 6.5) 
-FS.set_variable("clock_speed", 9.8) 
+FS.set_variable("core_temperature", 50) 
+FS.set_variable("clock_speed", 3) 
 
 fan_speed1 = FS.inference()
 print(fan_speed1)
