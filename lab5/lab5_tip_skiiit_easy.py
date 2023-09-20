@@ -84,3 +84,4 @@ cset = ax.contourf(x, y, tips, zdir='x', offset=3, cmap='viridis', alpha=0.5)
 cset = ax.contourf(x, y, tips, zdir='y', offset=3, cmap='viridis', alpha=0.5)
 
 ax.view_init(30, 200)
+plt.show()
