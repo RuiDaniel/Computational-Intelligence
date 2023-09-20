@@ -1,5 +1,7 @@
 import simpful as sf
 
-# A simple fuzzy model describing how the heating power of a gas burner depends on the oxygen supply.
+# The aim is to control the speed of a CPU fan based on the:
+# – Core temperature (in degrees Celsius)
+# – Clock speed (in GHz)
 
 FS = sf.FuzzySystem()
