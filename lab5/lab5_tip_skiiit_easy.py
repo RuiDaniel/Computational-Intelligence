@@ -31,12 +31,26 @@ plt.show()
 
 
 
-rule1 = ctrl.Rule(quality['poor'] & service['poor'], tip['low'])
+# rule1 = ctrl.Rule(quality['poor'] & service['poor'], tip['low'])
 # rule1 = ctrl.Rule(quality['poor'] ~ service['poor'], tip['low'])
 
-# rule1 = ctrl.Rule(quality['poor'] | service['poor'], tip['low'])
+rule1 = ctrl.Rule(quality['poor'] | service['poor'], tip['low'])
 rule2 = ctrl.Rule(service['average'], tip['medium'])
 rule3 = ctrl.Rule(service['good'] | quality['good'], tip['high'])
 
 rule1.view()
 plt.show()
+
+
+tipping_ctrl = ctrl.ControlSystem([rule1, rule2, rule3])
+
+# In order to simulate this control system, we will create a ControlSystemSimulation
+tipping = ctrl.ControlSystemSimulation(tipping_ctrl)
+
+# Pass inputs to the ControlSystem using Antecedent labels with Pythonic API
+# Note: if you like passing many inputs all at once, use .inputs(dict_of_data)
+tipping.input['quality'] = 6.5
+tipping.input['service'] = 9.8
+
+# Crunch the numbers
+tipping.compute()
