@@ -36,3 +36,7 @@ X_haber = (np.array(haberman))[:,:-1]
 X_train_haber, X_test_haber, y_train_haber, y_test_haber = train_test_split(X_haber, y_haber, test_size=0.3, random_state=42)
 
 
+# Cross-Validation is necessary since we need to test the best number os hidden layes, density and best hyper paremeters
+
+clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train, y_train)
+clf.predict_proba(X_test[:1])
