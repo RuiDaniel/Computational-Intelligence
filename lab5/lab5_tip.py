@@ -21,3 +21,4 @@ FS.set_variable("quality", 6.5)
 FS.set_variable("service", 9.8) 
 
 tip = FS.inference()
+print(tip)
