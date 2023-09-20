@@ -20,6 +20,21 @@ FS.add_linguistic_variable("clock_speed", sf.LinguisticVariable([C1, C2, C3], un
 
 
 
-F1 = sf.TriangleFuzzySet(0,0,3500,   term="low")
-F2 = sf.TriangleFuzzySet(2500,6000,6000,  term="normal")
+F1 = sf.TriangleFuzzySet(0,0,3500,   term="slow")
+F2 = sf.TriangleFuzzySet(2500,6000,6000,  term="fast")
 FS.add_linguistic_variable("fan_speed", sf.LinguisticVariable([F1, F2], universe_of_discourse=[0,6000]))
+
+
+
+FS.add_rules([
+    "IF (core_temperature IS cold) AND (clock_speed is low) THEN (fan_speed is slow)",
+    "IF (core_temperature IS cold) AND (clock_speed is normal) THEN (fan_speed is slow)",
+    "IF (core_temperature IS cold) AND (clock_speed is turbo) THEN (fan_speed is fast)",
+    "IF (core_temperature IS warm) AND (clock_speed is low) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS warm) AND (clock_speed is normal) THEN (fan_speed IS slow)",
+    "IF (core_temperature IS warm) AND (clock_speed IS turbo) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS hot) AND (clock_speed is low) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS hot) AND (clock_speed is normal) THEN (fan_speed IS fast)",
+    "IF (core_temperature IS hot) AND (clock_speed IS turbo) THEN (fan_speed IS fast)"
+	])
+
