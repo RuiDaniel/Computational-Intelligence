@@ -38,3 +38,9 @@ FS.add_rules([
     "IF (core_temperature IS hot) AND (clock_speed IS turbo) THEN (fan_speed IS fast)"
 	])
 
+
+FS.set_variable("core_temperature", 6.5) 
+FS.set_variable("clock_speed", 9.8) 
+
+fan_speed1 = FS.inference()
+print(fan_speed1)
