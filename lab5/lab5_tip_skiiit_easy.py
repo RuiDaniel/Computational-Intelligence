@@ -54,3 +54,7 @@ tipping.input['service'] = 9.8
 
 # Crunch the numbers
 tipping.compute()
+
+print(tipping.output['tip'])
+tip.view(sim=tipping)
+plt.show()
