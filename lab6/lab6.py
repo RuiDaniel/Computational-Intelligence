@@ -7,17 +7,18 @@ from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import ShuffleSplit
 from sklearn.model_selection import cross_val_score
-from sklearn import metrics
+from sklearn.metrics import accuracy_score, precision_score, confusion_matrix, recall_score
 from sklearn.model_selection import GridSearchCV  # also does cross validation for us
+from sklearn.pipeline import Pipeline
 
 
-iris = pd.read_csv('iris/iris.data', header=None, names = ['s_length', 's_width', 'p_length', 'p_width', 'class'])
+iris = pd.read_csv('lab6/iris/iris.data', header=None, names = ['s_length', 's_width', 'p_length', 'p_width', 'class'])
 
 # print(iris.head)
 # print(iris.tail)
 print(iris.dtypes)
 
-haberman = pd.read_csv('haberman/haberman.data', header=None, names = ['age', 'operation_year', 'nodes_detected', 'status'])
+haberman = pd.read_csv('lab6/haberman/haberman.data', header=None, names = ['age', 'operation_year', 'nodes_detected', 'status'])
 
 # print(haberman.head)
 # print(haberman.tail)
@@ -42,29 +43,91 @@ X_haber = (np.array(haberman))[:,:-1]
 X_train_haber, X_test_haber, y_train_haber, y_test_haber = train_test_split(X_haber, y_haber, test_size=0.3, random_state=42)
 
 
-# Cross-Validation is necessary since we need to test the best number os hidden layes, density and best hyper paremeters
 
-# make_pipeline(StandardScaler(), clf)
-#         clf = make_pipeline(StandardScaler(), clf)
-#         clf.fit(X_train, y_train)
-#         score = clf.score(X_test, y_test)
 
-# cv = ShuffleSplit(n_splits=5, test_size=0.3, random_state=0)
-# scores = cross_val_score(clf, X, y, cv=cv)
-# scores.mean()
+###################################################################################################
+### Iris DATASET ###
 
-mlp = make_pipeline(StandardScaler(), MLPClassifier(max_iter=200))
+
+mlp = MLPClassifier(max_iter=100)
+
+# Create a pipeline with StandardScaler and MLPClassifier
+pipeline = Pipeline([
+    ('scaler', StandardScaler()),  # Normalization step
+    ('classifier', mlp)  # MLPClassifier step
+])
 
 test_params = {
-    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,), (20, 20, 20, 20)],
-    'activation': ['tanh', 'relu'],
-    'solver': ['sgd', 'adam', 'lbfgs'],
-    'alpha': [0.0001, 0.001, 0.005, 0.01, 0.05],
-    'learning_rate': ['constant','adaptive'],
+    'classifier__hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,), (20, 20, 20, 20)],
+    'classifier__activation': ['tanh', 'relu'],
+    'classifier__solver': ['sgd', 'adam', 'lbfgs'],
+    'classifier__alpha': [0.0001, 0.001, 0.005, 0.01, 0.05],
+    'classifier__learning_rate': ['constant', 'adaptive'],
 }
 
-grid_search = GridSearchCV(mlp, test_params, cv=5)
-
+grid_search = GridSearchCV(pipeline, test_params, cv=5)
 grid_search.fit(X_train, y_train)
 
 print(grid_search.best_params_)
+
+best_mlp = grid_search.best_estimator_
+
+y_pred = best_mlp.predict(X_test)
+
+
+recall = recall_score(y_test, y_pred, average=None)
+print('recall: {}'.format(recall))
+
+
+matrix_conf = confusion_matrix(y_test, y_pred)
+print('confusion matrix: \n {}'.format(matrix_conf))
+
+precision = precision_score(y_test, y_pred, average=None)
+print('precision: {}'.format(precision))
+
+accuracy = accuracy_score(y_test, y_pred)
+print('accuracy: {}'.format(accuracy))
+
+
+
+###################################################################################################
+### haberman DATASET ###
+
+mlp_haberman = MLPClassifier(max_iter=100)
+
+# Create a pipeline with StandardScaler and MLPClassifier
+pipeline_haberman = Pipeline([
+    ('scaler', StandardScaler()),  # Normalization step
+    ('classifier_haberman', mlp_haberman)  # MLPClassifier step
+])
+
+test_params_haberman = {
+    'classifier_haberman__hidden_layer_sizes': [(50, 50, 50), (50, 100, 50), (100,), (20, 20, 20, 20)],
+    'classifier_haberman__activation': ['tanh', 'relu'],
+    'classifier_haberman__solver': ['sgd', 'adam', 'lbfgs'],
+    'classifier_haberman__alpha': [0.0001, 0.001, 0.005, 0.01, 0.05],
+    'classifier_haberman__learning_rate': ['constant', 'adaptive'],
+}
+
+grid_search_haberman = GridSearchCV(pipeline_haberman, test_params_haberman, cv=5)
+grid_search_haberman.fit(X_train_haber, y_train_haber)
+
+print(grid_search_haberman.best_params_)
+
+best_mlp_haberman = grid_search_haberman.best_estimator_
+
+y_pred_haber = best_mlp_haberman.predict(X_test_haber)
+
+
+recall = recall_score(y_test_haber, y_pred_haber, average=None)
+print('recall: {}'.format(recall))
+
+
+matrix_conf = confusion_matrix(y_test_haber, y_pred_haber)
+print('confusion matrix: \n {}'.format(matrix_conf))
+
+precision = precision_score(y_test_haber, y_pred_haber, average=None)
+print('precision: {}'.format(precision))
+
+accuracy = accuracy_score(y_test_haber, y_pred_haber)
+print('accuracy: {}'.format(accuracy))
