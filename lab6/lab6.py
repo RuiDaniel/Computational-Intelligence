@@ -3,7 +3,15 @@ import pandas as pd
 import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
+from sklearn.pipeline import make_pipeline
+from sklearn.preprocessing import StandardScaler
 
+
+
+# make_pipeline(StandardScaler(), clf)
+#         clf = make_pipeline(StandardScaler(), clf)
+#         clf.fit(X_train, y_train)
+#         score = clf.score(X_test, y_test)
 
 iris = pd.read_csv('iris/iris.data', header=None, names = ['s_length', 's_width', 'p_length', 'p_width', 'class'])
 
