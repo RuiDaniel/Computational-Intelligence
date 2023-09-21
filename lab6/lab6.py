@@ -5,13 +5,11 @@ from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import ShuffleSplit
+from sklearn.model_selection import cross_val_score
+from sklearn import metrics
+from sklearn.model_selection import GridSearchCV  # also does cross validation for us
 
-
-
-# make_pipeline(StandardScaler(), clf)
-#         clf = make_pipeline(StandardScaler(), clf)
-#         clf.fit(X_train, y_train)
-#         score = clf.score(X_test, y_test)
 
 iris = pd.read_csv('iris/iris.data', header=None, names = ['s_length', 's_width', 'p_length', 'p_width', 'class'])
 
@@ -46,5 +44,27 @@ X_train_haber, X_test_haber, y_train_haber, y_test_haber = train_test_split(X_ha
 
 # Cross-Validation is necessary since we need to test the best number os hidden layes, density and best hyper paremeters
 
-clf = MLPClassifier(random_state=1, max_iter=300).fit(X_train, y_train)
-clf.predict_proba(X_test[:1])
+# make_pipeline(StandardScaler(), clf)
+#         clf = make_pipeline(StandardScaler(), clf)
+#         clf.fit(X_train, y_train)
+#         score = clf.score(X_test, y_test)
+
+# cv = ShuffleSplit(n_splits=5, test_size=0.3, random_state=0)
+# scores = cross_val_score(clf, X, y, cv=cv)
+# scores.mean()
+
+mlp = make_pipeline(StandardScaler(), MLPClassifier(max_iter=200))
+
+test_params = {
+    'hidden_layer_sizes': [(50,50,50), (50,100,50), (100,), (20, 20, 20, 20)],
+    'activation': ['tanh', 'relu'],
+    'solver': ['sgd', 'adam', 'lbfgs'],
+    'alpha': [0.0001, 0.001, 0.005, 0.01, 0.05],
+    'learning_rate': ['constant','adaptive'],
+}
+
+grid_search = GridSearchCV(mlp, test_params, cv=5)
+
+grid_search.fit(X_train, y_train)
+
+print(grid_search.best_params_)
