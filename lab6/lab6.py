@@ -68,27 +68,9 @@ test_params = {
 grid_search = GridSearchCV(pipeline, test_params, cv=5)
 grid_search.fit(X_train, y_train)
 
-print(grid_search.best_params_)
-
 best_mlp = grid_search.best_estimator_
 
 y_pred = best_mlp.predict(X_test)
-
-
-recall = recall_score(y_test, y_pred, average=None)
-print('recall: {}'.format(recall))
-
-
-matrix_conf = confusion_matrix(y_test, y_pred)
-print('confusion matrix: \n {}'.format(matrix_conf))
-
-precision = precision_score(y_test, y_pred, average=None)
-print('precision: {}'.format(precision))
-
-accuracy = accuracy_score(y_test, y_pred)
-print('accuracy: {}'.format(accuracy))
-
-
 
 ###################################################################################################
 ### haberman DATASET ###
@@ -119,15 +101,35 @@ best_mlp_haberman = grid_search_haberman.best_estimator_
 y_pred_haber = best_mlp_haberman.predict(X_test_haber)
 
 
-recall = recall_score(y_test_haber, y_pred_haber, average=None)
+
+######################################################################################################
+### Evaluation ###
+
+recall_haber = recall_score(y_test_haber, y_pred_haber, average=None)
+print('recall_haber: {}'.format(recall_haber))
+
+
+matrix_conf_haber = confusion_matrix(y_test_haber, y_pred_haber)
+print('confusion matrix_haber: \n {}'.format(matrix_conf_haber))
+
+precision_haber = precision_score(y_test_haber, y_pred_haber, average=None)
+print('precision_haber: {}'.format(precision_haber))
+
+accuracy_haber = accuracy_score(y_test_haber, y_pred_haber)
+print('accuracy_haber: {}'.format(accuracy_haber))
+
+
+print(grid_search.best_params_)
+
+recall = recall_score(y_test, y_pred, average=None)
 print('recall: {}'.format(recall))
 
 
-matrix_conf = confusion_matrix(y_test_haber, y_pred_haber)
+matrix_conf = confusion_matrix(y_test, y_pred)
 print('confusion matrix: \n {}'.format(matrix_conf))
 
-precision = precision_score(y_test_haber, y_pred_haber, average=None)
+precision = precision_score(y_test, y_pred, average=None)
 print('precision: {}'.format(precision))
 
-accuracy = accuracy_score(y_test_haber, y_pred_haber)
+accuracy = accuracy_score(y_test, y_pred)
 print('accuracy: {}'.format(accuracy))
