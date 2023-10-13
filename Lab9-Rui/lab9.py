@@ -30,10 +30,9 @@ toolbox = base.Toolbox()
 
 # Attribute generator 
 #                      define 'attr_bool' to be an attribute ('gene')
-#                      which corresponds to integers sampled uniformly
-#                      from the range [0,1] (i.e. 0 or 1 with equal
-#                      probability)
-toolbox.register("attr_bool", random.randint, -1, 1)
+#                      which corresponds to floats sampled uniformly
+#                      from the range [-1,1] 
+toolbox.register("attr_bool", random.uniform, -1, 1)
 
 # Structure initializers
 #                         define 'individual' to be an individual
