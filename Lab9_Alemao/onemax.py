@@ -70,6 +70,11 @@ toolbox.register("mate", tools.cxTwoPoint)
 # register a mutation operator with a probability to
 # flip each attribute/gene of 0.05
 toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
+# toolbox.register("mutate", tools.mutGaussian, indpb=0.05)
+# toolbox.register("mutate", tools.mutShuffleIndexes, indpb=0.05)
+# toolbox.register("mutate", tools.mutPolynomialBounded, indpb=0.05)
+# toolbox.register("mutate", tools.mutUniformInt, indpb=0.05)
+# toolbox.register("mutate", tools.mutESLogNormal, indpb=0.05)
 
 # operator for selecting individuals for breeding the next
 # generation: each individual of the current generation
