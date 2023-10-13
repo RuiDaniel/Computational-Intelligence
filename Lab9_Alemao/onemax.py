@@ -56,6 +56,16 @@ toolbox.register("evaluate", evalOneMax)
 
 # register the crossover operator
 toolbox.register("mate", tools.cxTwoPoint)
+# toolbox.register("mate", tools.	cxOnePoint)
+# toolbox.register("mate", tools.cxUniform)
+# toolbox.register("mate", tools.	cxPartialyMatched)
+# toolbox.register("mate", tools.	cxOrdered)
+# toolbox.register("mate", tools.cxBlend)
+# toolbox.register("mate", tools.cxESBlend)
+# toolbox.register("mate", tools.cxESTwoPoint)
+# toolbox.register("mate", tools.	cxSimulatedBinary)
+# toolbox.register("mate", tools.cxSimulatedBinaryBounded)
+# toolbox.register("mate", tools.	cxMessyOnePoint)
 
 # register a mutation operator with a probability to
 # flip each attribute/gene of 0.05
@@ -86,13 +96,16 @@ def main():
     
     # Evaluate the entire population
     fitnesses = list(map(toolbox.evaluate, pop))
-    for ind, fit in zip(pop, fitnesses):
+    # print(fitnesses)
+    # print(list(zip(pop, fitnesses)))
+    for ind, fit in zip(pop, fitnesses): #ind -> individual
         ind.fitness.values = fit
     
     print("  Evaluated %i individuals" % len(pop))
 
     # Extracting all the fitnesses of 
     fits = [ind.fitness.values[0] for ind in pop]
+    # print(fits)
 
     # Variable keeping track of the number of generations
     g = 0
@@ -150,6 +163,9 @@ def main():
         print("  Max %s" % max(fits))
         print("  Avg %s" % mean)
         print("  Std %s" % std)
+        
+        best_ind_gen = tools.selBest(pop, 1)[0]
+        print("Best individual in generation %d: %s, %s" % (g, best_ind_gen, best_ind_gen.fitness.values))
     
     print("-- End of (successful) evolution --")
     
