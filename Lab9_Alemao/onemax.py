@@ -82,6 +82,8 @@ toolbox.register("mutate", tools.mutFlipBit, indpb=0.05)
 # drawn randomly from the current generation.
 toolbox.register("select", tools.selTournament, tournsize=3)
 
+### more selections in https://deap.readthedocs.io/en/master/api/tools.html
+
 #----------
 
 def main():
@@ -111,6 +113,9 @@ def main():
     # Extracting all the fitnesses of 
     fits = [ind.fitness.values[0] for ind in pop]
     # print(fits)
+    
+    #initialize hall of fame     
+    hof = tools.HallOfFame(1)
 
     # Variable keeping track of the number of generations
     g = 0
@@ -156,6 +161,8 @@ def main():
         # The population is entirely replaced by the offspring
         pop[:] = offspring
         
+        hof.update(pop)
+                
         # Gather all the fitnesses in one list and print the stats
         fits = [ind.fitness.values[0] for ind in pop]
         
@@ -171,11 +178,12 @@ def main():
         
         best_ind_gen = tools.selBest(pop, 1)[0]
         print("Best individual in generation %d: %s, %s" % (g, best_ind_gen, best_ind_gen.fitness.values))
-    
+        print("Hall of fame: {} {}".format(hof[0], hof[0].fitness.values[0]))
     print("-- End of (successful) evolution --")
     
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is %s, %s" % (best_ind, best_ind.fitness.values))
+
 
 if __name__ == "__main__":
     main()
