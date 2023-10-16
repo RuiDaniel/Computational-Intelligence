@@ -18,6 +18,7 @@ import random
 import json
 
 import numpy
+import math
 
 from math import sqrt
 
@@ -27,21 +28,42 @@ from deap import benchmarks
 from deap.benchmarks.tools import diversity, convergence, hypervolume
 from deap import creator
 from deap import tools
+import matplotlib.pyplot as plt
 
-creator.create("FitnessMin", base.Fitness, weights=(-1.0, -1.0))
+def z1_fun(X1, X2):
+    return math.sqrt((X1**2) + (X2**2))
+def z2_fun(X1, X2):
+    return math.sqrt(((X1-1)**2) + ((X2+1)**2))
+
+def f1_and_f2(part):
+    X1, X2 = part
+    
+    # print(X1,X2)
+    # print(((math.sin(4*z1_fun(X1, X2))/z1_fun(X1, X2)) + (math.sin(2.5*z2_fun(X1, X2))/z2_fun(X1, X2))))
+    return ((math.sin(4*z1_fun(X1, X2))/z1_fun(X1, X2)) + (math.sin(2.5*z2_fun(X1, X2))/z2_fun(X1, X2))), (1 - math.sin(5 * z1_fun(X1, X2)) /z1_fun(X1, X2))
+
+# def f2(part):
+#     X1, X2 = part
+#     # print(X1,X2)
+#     # print(((math.sin(4*z1_fun(X1, X2))/z1_fun(X1, X2)) + (math.sin(2.5*z2_fun(X1, X2))/z2_fun(X1, X2))))
+#     return ,
+
+
+
+creator.create("FitnessMin", base.Fitness, weights=(1.0, -1.0)) #maximum if f1 and minimum of f2 (1.0, -1.0)
 creator.create("Individual", array.array, typecode='d', fitness=creator.FitnessMin)
 
 toolbox = base.Toolbox()
 
 # Problem definition
 # Functions zdt1, zdt2, zdt3, zdt6 have bounds [0, 1]
-BOUND_LOW, BOUND_UP = 0.0, 1.0
+BOUND_LOW, BOUND_UP = -6, 6
 
 # Functions zdt4 has bounds x1 = [0, 1], xn = [-5, 5], with n = 2, ..., 10
 # BOUND_LOW, BOUND_UP = [0.0] + [-5.0]*9, [1.0] + [5.0]*9
 
 # Functions zdt1, zdt2, zdt3 have 30 dimensions, zdt4 and zdt6 have 10
-NDIM = 30
+NDIM = 2
 
 def uniform(low, up, size=None):
     try:
@@ -53,7 +75,7 @@ toolbox.register("attr_float", uniform, BOUND_LOW, BOUND_UP, NDIM)
 toolbox.register("individual", tools.initIterate, creator.Individual, toolbox.attr_float)
 toolbox.register("population", tools.initRepeat, list, toolbox.individual)
 
-toolbox.register("evaluate", benchmarks.zdt1)
+toolbox.register("evaluate", f1_and_f2)
 toolbox.register("mate", tools.cxSimulatedBinaryBounded, low=BOUND_LOW, up=BOUND_UP, eta=20.0)
 toolbox.register("mutate", tools.mutPolynomialBounded, low=BOUND_LOW, up=BOUND_UP, eta=20.0, indpb=1.0/NDIM)
 toolbox.register("select", tools.selNSGA2)
@@ -64,6 +86,8 @@ def main(seed=None):
     NGEN = 250
     MU = 100
     CXPB = 0.9
+
+    pareto = tools.ParetoFront()
 
     stats = tools.Statistics(lambda ind: ind.fitness.values)
     # stats.register("avg", numpy.mean, axis=0)
@@ -89,6 +113,7 @@ def main(seed=None):
     record = stats.compile(pop)
     logbook.record(gen=0, evals=len(invalid_ind), **record)
     print(logbook.stream)
+    pareto.update(pop)
 
     # Begin the generational process
     for gen in range(1, NGEN):
@@ -115,10 +140,22 @@ def main(seed=None):
         record = stats.compile(pop)
         logbook.record(gen=gen, evals=len(invalid_ind), **record)
         print(logbook.stream)
+        
+        pareto.update(pop)
+        
+        # Plot current population and Pareto front
+        front = numpy.array([ind.fitness.values for ind in pareto])
+        pop_fitness = numpy.array([ind.fitness.values for ind in pop])
+        plt.scatter(pop_fitness[:, 0], pop_fitness[:, 1], c="b", label="Population" if gen == 1 else "")
+        plt.scatter(front[:, 0], front[:, 1], c="r", label="Pareto Front" if gen == 1 else "")
+        plt.title(f"Generation {gen}")
+        plt.xlabel("f1")
+        plt.ylabel("f2")
+        plt.pause(0.001) 
 
     print("Final population hypervolume is %f" % hypervolume(pop, [11.0, 11.0]))
 
-    return pop, logbook
+    return pop, logbook, pareto
         
 if __name__ == "__main__":
     # with open("pareto_front/zdt1_front.json") as optimal_front_data:
@@ -126,19 +163,25 @@ if __name__ == "__main__":
     # Use 500 of the 1000 points in the json file
     # optimal_front = sorted(optimal_front[i] for i in range(0, len(optimal_front), 2))
     
-    pop, stats = main()
+    pop, stats, pareto = main()
     # pop.sort(key=lambda x: x.fitness.values)
     
     # print(stats)
+    
     # print("Convergence: ", convergence(pop, optimal_front))
     # print("Diversity: ", diversity(pop, optimal_front[0], optimal_front[-1]))
     
-    # import matplotlib.pyplot as plt
-    # import numpy
+    import matplotlib.pyplot as plt
+    import numpy as np
     
-    # front = numpy.array([ind.fitness.values for ind in pop])
-    # optimal_front = numpy.array(optimal_front)
+    #final pareto_front 
+    
+    front = np.array([ind.fitness.values for ind in pareto])
+    # front = np.array([ind.fitness.values for ind in pop])
+    # optimal_front = np.array(optimal_front)
     # plt.scatter(optimal_front[:,0], optimal_front[:,1], c="r")
-    # plt.scatter(front[:,0], front[:,1], c="b")
-    # plt.axis("tight")
-    # plt.show()
+    plt.scatter(front[:,0], front[:,1], c="b")
+    plt.axis("tight")
+    plt.xlabel("f1")
+    plt.ylabel("f2")
+    plt.show()

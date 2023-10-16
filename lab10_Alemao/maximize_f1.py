@@ -24,6 +24,17 @@ from deap import benchmarks
 from deap import creator
 from deap import tools
 
+def z1_fun(X1, X2):
+    return math.sqrt((X1**2) + (X2**2))
+def z2_fun(X1, X2):
+    return math.sqrt(((X1-1)**2) + ((X2+1)**2))
+
+def f1(part):
+    X1, X2 = part
+    # print(X1,X2)
+    # print(((math.sin(4*z1_fun(X1, X2))/z1_fun(X1, X2)) + (math.sin(2.5*z2_fun(X1, X2))/z2_fun(X1, X2))))
+    return ((math.sin(4*z1_fun(X1, X2))/z1_fun(X1, X2)) + (math.sin(2.5*z2_fun(X1, X2))/z2_fun(X1, X2))),
+
 creator.create("FitnessMax", base.Fitness, weights=(1.0,))
 creator.create("Particle", list, fitness=creator.FitnessMax, speed=list, 
     smin=None, smax=None, best=None)
@@ -56,7 +67,7 @@ toolbox = base.Toolbox()
 toolbox.register("particle", generate, size=2, pmin=-3, pmax=3, smin=-2, smax=2)
 toolbox.register("population", tools.initRepeat, list, toolbox.particle)
 toolbox.register("update", updateParticle, c1 = 1.0, c2 = 1.0, w = 1.0, phi1=1.0, phi2=1.0)
-toolbox.register("evaluate", benchmarks.h1)
+toolbox.register("evaluate", f1)
 
 def main():
     pop = toolbox.population(n=5)
