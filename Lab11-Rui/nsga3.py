@@ -107,6 +107,8 @@ def main(seed=None):
     record = stats.compile(pop)
     logbook.record(gen=0, evals=len(invalid_ind), **record)
     print(logbook.stream)
+    # Update the Pareto front
+    pareto.update(pop)
 
     # Begin the generational process
     for gen in range(1, NGEN):
@@ -129,43 +131,54 @@ def main(seed=None):
         # Update the Pareto front
         pareto.update(pop)
         
-        # Plot the population in the objective space and the Pareto front
-        fig = plt.figure(figsize=(7, 7))
-        ax = fig.add_subplot(111, projection="3d")
-        p = numpy.array([ind.fitness.values for ind in pop])
-        ax.scatter(p[:, 0], p[:, 1], marker="o", s=24)
-        ax.view_init(elev=11, azim=-25)
-        ax.autoscale(tight=True)
-        plt.tight_layout()
-        plt.savefig(f"nsga3_gen_{gen}.png")
+        if gen == 99: 
+            # Plot the population in the objective space and the Pareto front
+            fig = plt.figure(figsize=(7, 7))
+            ax = fig.add_subplot(111, projection="3d")
+            p = numpy.array([ind.fitness.values for ind in pop])
+            ax.scatter(p[:, 0], p[:, 1], marker="o", s=24)
+            ax.view_init(elev=11, azim=-25)
+            ax.autoscale(tight=True)
+            plt.tight_layout()
+            plt.savefig(f"Lab11-Rui/nsga3_gen_{gen}.png")
 
-    return pop, logbook
+    return pop, logbook, pareto
 
+import numpy as np
 
 if __name__ == "__main__":
-    pop, stats = main()
+    pop, stats, pareto = main()
     pop_fit = numpy.array([ind.fitness.values for ind in pop])
 
-    pf = problem.pareto_front(ref_points)
+    pf  = problem.pareto_front(ref_points)
     #print(igd(pop_fit, pf))
 
     import matplotlib.pyplot as plt
     import mpl_toolkits.mplot3d as Axes3d
 
-    fig = plt.figure(figsize=(7, 7))
-    ax = fig.add_subplot(111, projection="3d")
+    # fig = plt.figure(figsize=(7, 7))
+    # ax = fig.add_subplot(111, projection="3d")
 
-    p = numpy.array([ind.fitness.values for ind in pop])
-    ax.scatter(p[:, 0], p[:, 1], marker="o", s=24, label="Final Population")
+    # p = numpy.array([ind.fitness.values for ind in pop])
+    # ax.scatter(p[:, 0], p[:, 1], marker="o", s=24, label="Final Population")
 
-    # ax.scatter(pf[:, 0], pf[:, 1], marker="x", c="k", s=32, label="Ideal Pareto Front")
+    # # ax.scatter(pf[:, 0], pf[:, 1], marker="x", c="k", s=32, label="Ideal Pareto Front")
 
-    # ref_points = tools.uniform_reference_points(NOBJ, P)
+    # # ref_points = tools.uniform_reference_points(NOBJ, P)
 
-    # ax.scatter(ref_points[:, 0], ref_points[:, 1], marker="o", s=24, label="Reference Points")
+    # # ax.scatter(ref_points[:, 0], ref_points[:, 1], marker="o", s=24, label="Reference Points")
 
-    ax.view_init(elev=11, azim=-25)
-    ax.autoscale(tight=True)
-    plt.legend()
-    plt.tight_layout()
-    plt.savefig("nsga3.png")
+    # ax.view_init(elev=11, azim=-25)
+    # ax.autoscale(tight=True)
+    # plt.legend()
+    # plt.tight_layout()
+    # plt.savefig("nsga3.png")
+    
+    front = np.array([ind.fitness.values for ind in pareto])
+
+    print(front[:,0], front[:,1])
+    plt.scatter(front[:,0], front[:,1], c="b", s=10)
+    plt.axis("tight")
+    plt.xlabel("f1")
+    plt.ylabel("f2")
+    plt.savefig("Lab11-Rui/nsga3.png")
