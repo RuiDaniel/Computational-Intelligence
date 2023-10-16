@@ -17,7 +17,7 @@ NOBJ = 1
 NDIM = 2
 P = 12
 H = factorial(NOBJ + P - 1) / (factorial(P) * factorial(NOBJ - 1))
-BOUND_LOW, BOUND_UP = 0.0, 4.0
+BOUND_LOW, BOUND_UP = -1.0, 1.0
 problem = pymop.factory.get_problem(PROBLEM, n_var=NDIM, n_obj=NOBJ)
 ##
 
